@@ -1,0 +1,159 @@
+/* extracted and refactored styles */
+:root {
+    --jump-height: -180px;
+    --double-jump-height: -260px;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #1a0f2e;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden;
+}
+
+#game-container {
+    width: 100%;
+    max-width: 1000px;
+    aspect-ratio: 1000 / 650;
+    border-bottom: 6px solid #4ade80;
+    background: linear-gradient(to bottom, #2d1b4e, #1a0f2e);
+    position: relative;
+    overflow: hidden;
+    transform-origin: center center; /* scale from center */
+}
+
+.overlay-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(26, 15, 46, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    color: white;
+    overflow-y: auto;
+}
+
+#password-modal {
+    background-color: rgba(0, 0, 0, 0.85);
+    z-index: 110;
+}
+
+.overlay-screen h1, .overlay-screen h2 {
+    color: #f1fa8c;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px #000;
+    text-align: center;
+}
+
+#player-name, #admin-password-input {
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #bd93f9;
+    text-align: center;
+    margin-bottom: 20px;
+    outline: none;
+    background: #282a36;
+    color: white;
+}
+
+.action-btn {
+    font-size: 20px;
+    padding: 10px 30px;
+    background-color: #ff79c6;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    margin-top: 10px;
+}
+
+.action-btn:hover { background-color: #ff92d0; transform: scale(1.05); }
+
+#admin-panel-btn { background-color: #6272a4; font-size: 14px; padding: 8px 20px; margin-top: 30px; }
+#admin-panel-btn:hover { background-color: #7a8ec9; }
+
+#leaderboard-table, #admin-table { width: 100%; border-collapse: collapse; }
+
+.table-container {
+    width: 80%;
+    margin-top: 5px;
+    background: rgba(0,0,0,0.6);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid #bd93f9;
+}
+
+#admin-table-container { max-height: 250px; overflow-y: auto; }
+
+#leaderboard-table th, #leaderboard-table td, #admin-table th, #admin-table td {
+    border: 1px solid #bd93f9; padding: 8px; text-align: center; font-size: 16px;
+}
+#leaderboard-table th, #admin-table th { background-color: #bd93f9; color: #282a36; position: sticky; top: 0; font-weight: bold; }
+
+.delete-btn { background-color: #ff5555; color: white; border: none; border-radius: 4px; cursor: pointer; padding: 4px 8px; font-weight: bold; }
+.delete-btn:hover { background-color: #ff2222; }
+
+.edit-btn { background-color: #f1fa8c; color: #282a36; border: none; border-radius: 4px; cursor: pointer; padding: 4px 8px; font-weight: bold; margin-left: 5px; }
+.edit-btn:hover { background-color: #ffffa5; }
+
+.settings-container { width: 90%; background: rgba(40, 42, 54, 0.8); border: 2px solid #50fa7b; border-radius: 8px; padding: 15px; margin-top: 15px; text-align: center; }
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: right; margin-bottom: 15px; }
+.settings-grid label { font-size: 15px; color: white; display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.4); padding: 6px 12px; border-radius: 5px; }
+.settings-grid input { background: #1a0f2e; color: #50fa7b; border: 1px solid #50fa7b; border-radius: 4px; padding: 6px; font-weight: bold; width: 60px; text-align: center; }
+
+#boss-ui { display: none; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 90%; justify-content: space-between; z-index: 20; }
+.hp-box { background: rgba(0, 0, 0, 0.6); border: 2px solid #ffd700; color: white; padding: 5px 15px; border-radius: 8px; font-weight: bold; font-size: 18px; }
+
+#red-hp-text { color: #ff4d4d; }
+#hunter-hp-text { color: #4dabf7; }
+#boss-hp-text { color: #9c27b0; }
+
+#player { width: 70px; height: 100px; background-image: url('../assets/images/red.png'); background-size: contain; background-repeat: no-repeat; position: absolute; bottom: 0; left: 50px; transform-origin: center; transform: translateY(0) rotate(0deg) scale(1, 1); z-index: 5; transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+#hunter { display: none; width: 80px; height: 110px; background-image: url('../assets/images/hunter.png'); background-size: contain; background-repeat: no-repeat; background-position: bottom; position: absolute; bottom: 0; left: 140px; z-index: 6; transform-origin: center; transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+.duck { transform: scaleY(0.25) scaleX(1.4) !important; transform-origin: bottom !important; }
+#boss { display: none; width: 150px; height: 150px; background-image: url('../assets/images/wolf.png'); background-size: contain; background-repeat: no-repeat; background-position: bottom; position: absolute; right: 20px; bottom: 0; z-index: 5; transform: scaleX(-1); transition: bottom 0.5s ease-out; }
+.obstacle { width: 80px; height: 60px; background-image: url('../assets/images/wolf.png'); background-size: contain; background-repeat: no-repeat; background-position: bottom; position: absolute; bottom: 0; z-index: 4; }
+
+.jump { animation: jump-flip 0.7s forwards; }
+@keyframes jump-flip { 0% { transform: translateY(0) rotate(0deg); animation-timing-function: ease-out; } 50% { transform: translateY(var(--jump-height)) rotate(180deg); animation-timing-function: ease-in; } 100% { transform: translateY(0) rotate(360deg); } }
+.double-jump { animation: double-jump-flip 0.7s forwards; }
+@keyframes double-jump-flip { 0% { transform: translateY(-100px) rotate(0deg); animation-timing-function: ease-out; } 50% { transform: translateY(var(--double-jump-height)) rotate(180deg); animation-timing-function: ease-in; } 100% { transform: translateY(0) rotate(360deg); } }
+
+#score-container { position: absolute; top: 50px; right: 20px; text-align: right; z-index: 10; }
+#score { color: #f8f8f2; font-size: 24px; font-weight: bold; }
+#high-score { color: #8be9fd; font-size: 16px; margin-top: 5px; }
+#boost-msg { position: absolute; top: 50px; left: 20px; color: #ffb86c; font-size: 20px; font-weight: bold; display: none; animation: blink 1s infinite; z-index: 10; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+#center-msg { position: absolute; top: 40%; width: 100%; text-align: center; color: #f1fa8c; font-size: 28px; font-weight: bold; display: none; z-index: 10; text-shadow: 2px 2px 4px #000; }
+
+.projectile { position: absolute; z-index: 15; }
+.grandma { width: 50px; height: 60px; background-image: url('../assets/images/savta.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+.cake { width: 45px; height: 45px; background-image: url('../assets/images/cake.png'); background-size: contain; background-repeat: no-repeat; background-position: center; }
+
+#game-over-screen, #admin-screen, #password-modal { display: none; }
+
+/* mobile control styles */
+#mobile-controls { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: none; gap: 10px; z-index: 120; }
+.mobile-btn { padding: 12px 20px; font-size: 18px; background: rgba(0,0,0,0.5); color: #fff; border: none; border-radius: 8px; }
+.mobile-btn:active { background: rgba(255,255,255,0.2); }
+
+/* responsive tweaks */
+@media (max-width: 600px) {
+    #mobile-controls { display: flex; }
+    .action-btn { font-size: 18px; padding: 8px 20px; }
+    #score { font-size: 20px; }
+    #high-score { font-size: 14px; }
+    #center-msg { font-size: 24px; }
+}
