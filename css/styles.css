@@ -16,9 +16,8 @@ body {
 }
 
 #game-container {
-    width: 100%;
-    max-width: 1000px;
-    aspect-ratio: 1000 / 650;
+    width: 1000px;
+    height: 650px;
     border-bottom: 6px solid #4ade80;
     background: linear-gradient(to bottom, #2d1b4e, #1a0f2e);
     position: relative;
@@ -96,7 +95,6 @@ body {
 }
 
 #admin-table-container { max-height: 250px; overflow-y: auto; }
-
 #leaderboard-table th, #leaderboard-table td, #admin-table th, #admin-table td {
     border: 1px solid #bd93f9; padding: 8px; text-align: center; font-size: 16px;
 }

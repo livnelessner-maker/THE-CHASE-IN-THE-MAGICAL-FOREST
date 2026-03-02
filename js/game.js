@@ -5,11 +5,15 @@ console.log('game.js loaded');
 let gameScale = 1;
 const container = document.getElementById('game-container');
 function resizeGame() {
-    let rect = container.getBoundingClientRect();
-    let scaleX = rect.width / 1000;
-    let scaleY = rect.height / 650;
+    // always base scaling on the *window* size rather than the container's own
+    // computed width, otherwise making the container fluid causes recursive
+    // shrinking (it would scale the scaled size again).
+    let scaleX = window.innerWidth  / 1000;
+    let scaleY = window.innerHeight / 650;
     gameScale = Math.min(scaleX, scaleY);
-    container.style.transform = `scale(${gameScale})`;
+    if (container) {
+        container.style.transform = `scale(${gameScale})`;
+    }
 }
 window.addEventListener('resize', resizeGame);
 resizeGame();
