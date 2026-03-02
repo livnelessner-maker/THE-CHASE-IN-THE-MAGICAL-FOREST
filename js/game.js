@@ -75,23 +75,46 @@ const jumpBtn = document.getElementById('jump-btn');
 const duckBtn = document.getElementById('duck-btn');
 const shootBtn = document.getElementById('shoot-btn');
 
+// helpers to start the game
+function startGame() {
+    // mirror keyboard/touch protections: only start if name entered and no overlay shown
+    if (
+        !gameStarted &&
+        isNameEntered &&
+        startScreen.style.display !== "flex" &&
+        adminScreen.style.display !== "flex" &&
+        passwordModal.style.display !== "flex"
+    ) {
+        gameStarted = true;
+        centerMsg.style.display = "none";
+        createObstacle();
+    }
+}
+
 // listeners for on-screen mobile controls
 if (jumpBtn) {
-    jumpBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        if (!gameStarted) { gameStarted = true; centerMsg.style.display = 'none'; createObstacle(); }
+    const handleJumpControl = (e) => {
+        if (e) e.preventDefault();
+        startGame();
         jump();
-    });
+    };
+    jumpBtn.addEventListener('touchstart', handleJumpControl);
+    jumpBtn.addEventListener('click', handleJumpControl); // fallback for mouse/desktop emulation
 }
 if (duckBtn) {
     duckBtn.addEventListener('touchstart', (e) => { e.preventDefault(); if (jumps === 0) { isDucking = true; player.classList.add('duck'); hunter.classList.add('duck'); } });
     duckBtn.addEventListener('touchend', (e) => { isDucking = false; player.classList.remove('duck'); hunter.classList.remove('duck'); });
+    duckBtn.addEventListener('click', (e) => { // support non-touch devices
+        e.preventDefault(); if (jumps === 0) { isDucking = true; player.classList.add('duck'); hunter.classList.add('duck'); }
+    });
 }
 if (shootBtn) {
-    shootBtn.addEventListener('touchstart', (e) => {
+    const shootHandler = (e) => {
         e.preventDefault();
         if (isBossFightActive && hunterHP > 0 && canShoot) { shootProjectile('hunter'); canShoot = false; setTimeout(() => { canShoot = true; }, 100); }
-    });
+    };
+    shootBtn.addEventListener('touchstart', shootHandler);
+    shootBtn.addEventListener('click', shootHandler);
 }
 
     // default configuration for the various game parameters; used when no stored
@@ -482,7 +505,7 @@ if (shootBtn) {
         if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
         if (!isNameEntered || startScreen.style.display === "flex" || adminScreen.style.display === "flex" || passwordModal.style.display === "flex") return; 
 
-        if (!gameStarted) { gameStarted = true; centerMsg.style.display = "none"; createObstacle(); }
+        startGame();
         jump();
     });
 
@@ -497,7 +520,7 @@ if (shootBtn) {
         }
 
         if (event.code === "Space") {
-            if (!gameStarted) { gameStarted = true; centerMsg.style.display = "none"; createObstacle(); }
+            startGame();
             jump();
         }
         if ((event.code === "KeyZ" || event.key === "ז") && isBossFightActive && hunterHP > 0) {
