@@ -75,6 +75,10 @@ const jumpBtn = document.getElementById('jump-btn');
 const duckBtn = document.getElementById('duck-btn');
 const shootBtn = document.getElementById('shoot-btn');
 
+// mobile duck and shoot should be hidden until boss fight
+if (duckBtn) duckBtn.style.display = 'none';
+if (shootBtn) shootBtn.style.display = 'none';
+
 // helpers to start the game
 function startGame() {
     // mirror keyboard/touch protections: only start if name entered and no overlay shown
@@ -102,11 +106,21 @@ if (jumpBtn) {
     jumpBtn.addEventListener('click', handleJumpControl); // fallback for mouse/desktop emulation
 }
 if (duckBtn) {
-    duckBtn.addEventListener('touchstart', (e) => { e.preventDefault(); if (jumps === 0) { isDucking = true; player.classList.add('duck'); hunter.classList.add('duck'); } });
-    duckBtn.addEventListener('touchend', (e) => { isDucking = false; player.classList.remove('duck'); hunter.classList.remove('duck'); });
-    duckBtn.addEventListener('click', (e) => { // support non-touch devices
-        e.preventDefault(); if (jumps === 0) { isDucking = true; player.classList.add('duck'); hunter.classList.add('duck'); }
-    });
+    const _startDuck = (e) => { if (e) e.preventDefault(); if (jumps === 0) { isDucking = true; player.classList.add('duck'); hunter.classList.add('duck'); } };
+    const _stopDuck = (e) => { if (e) e.preventDefault(); isDucking = false; player.classList.remove('duck'); hunter.classList.remove('duck'); };
+
+    // touch events
+    duckBtn.addEventListener('touchstart', _startDuck);
+    duckBtn.addEventListener('touchend', _stopDuck);
+    duckBtn.addEventListener('touchcancel', _stopDuck);
+
+    // mouse events for desktop: hold to duck, release to unduck
+    duckBtn.addEventListener('mousedown', _startDuck);
+    duckBtn.addEventListener('mouseup', _stopDuck);
+    duckBtn.addEventListener('mouseleave', _stopDuck);
+
+    // prevent click toggling the state
+    duckBtn.addEventListener('click', (e) => { e.preventDefault(); });
 }
 if (shootBtn) {
     const shootHandler = (e) => {
@@ -418,6 +432,10 @@ if (shootBtn) {
         bossHpText.innerText = bossHP; hunterHpText.innerText = hunterHP; redHpText.innerText = redHP;
         bossUI.style.display = "flex"; hunter.style.display = "block"; boss.style.display = "block";
 
+        // show mobile controls for boss: duck and shoot
+        if (duckBtn) duckBtn.style.display = 'inline-block';
+        if (shootBtn) shootBtn.style.display = 'inline-block';
+
         bossMoveInterval = setInterval(() => { if (isGameOver) return; let randomY = Math.random() * 180; boss.style.bottom = randomY + "px"; }, 1000);
         bossShootInterval = setInterval(() => { if (isGameOver) return; shootProjectile("boss"); }, 1500);
         projectilesInterval = setInterval(checkProjectilesCollision, 20);
@@ -486,11 +504,17 @@ if (shootBtn) {
         clearInterval(bossMoveInterval); clearInterval(bossShootInterval); clearInterval(projectilesInterval);
         document.querySelectorAll(".projectile").forEach(p => p.remove());
         boss.style.display = "none"; bossUI.style.display = "none";
+        // hide mobile boss controls again
+        if (duckBtn) duckBtn.style.display = 'none';
+        if (shootBtn) shootBtn.style.display = 'none';
         endGame("🏆 ניצחון מוחלט! הבסת את זאב הבוס והצלת את היער הקסום! 🏆");
     }
 
     function endGame(reasonMessage) {
         isGameOver = true; document.getElementById("center-msg").style.display = "none"; boostMsg.style.display = "none";
+        // ensure boss mobile controls hidden when game ends
+        if (duckBtn) duckBtn.style.display = 'none';
+        if (shootBtn) shootBtn.style.display = 'none';
         document.getElementById("end-reason").innerText = reasonMessage;
         
         let personalBest = getPlayerBestScore(playerName);
